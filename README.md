@@ -5,10 +5,10 @@
 ## Button:
 * default: #2d7a77  
 * hover: #44b3ae
-* clicked: #78a2c2
+* clicked: #00fff4
 ## Text: 
   * active: #c7e7ff
-  * inactive:  #8a8a8a
+  * inactive:  #3d3d3d
 ## Scroll Bar: #2d7a77
 ## Progress Bar
 * gradient from #8a8a8a(low%) to #c7e7ff(high%)
@@ -19,6 +19,25 @@
 * basic shapes
 * simple light on dark backgrounds
 * nothing fancy, this is just an assignment
+
+## Resources
+https://stackoverflow.com/questions/19821450/how-to-center-text-in-the-rectangle-in-svg-js
+
+
+## Button(string)
+* passing in an optional string sets the label for the button with just default parameters
+  * defaults string = 'button', size = 10, family = 'Helvetica'
+* move(x,y)
+    * set the x and y values to position the button
+* onclick(event)
+    * bind an action for when the button is clicked.
+* label(string, size, family)
+    * defaults: string = 'button', size = 10, family = 'Helvetica'
+
+## CheckBox()
+
+
+
 
 # Button
 * Visually change for at least three states (e.g., color change on hover).
