@@ -76,69 +76,64 @@ var LLama = (function() {
     }
 
 
-    var CheckBox = function(text = 'checkbox') {
-        // track if checked
-        var checked = false
+    var CheckBox = function(text = 'radio', qty= 1) {
+
         /* create the group
         * - sets the overflow attribute to visible to
         *  prevent element cutoff
         */
-        var group = draw.nested().attr({'overflow': 'visible'});
-        // define the click event to animate the checkbox
-        var clickEvent = (function(e){
-            console.log(e);
-
-            if(checked){
-                checked = false
-                console.log('un-checked');
-                circle.animate().move(-7, 0)
-
-            }
-            else{
-                checked = true
-                console.log('checked');
-                circle.animate().move(7, 0)
-            }
-        });
-        group.move(20,30)
-        // Begin states
-        // Up: Initial state
         // create nested group to contain the shape and text
-        var pill =  group.rect(45,25).fill(config.secondary)//.dx(-10).dy(-2.5)
+        var group = draw.nested().attr({'overflow': 'visible'});
+        /* create group elements
+        * box
+        * checkMark
+        * label
+        * */
+        var box = group.rect({
+            width:20,
+            height:20,
+            fill: config.primary,
+            radius: 5,
+        }).stroke({ color: config.secondary, opacity: 0.6, width: 5 })
 
-        var circle = group.circle(20).fill(config.primary)
+
+        var checkMark = group.circle({
+            r: (box.width()/4),
+            fill: config.secondary,
+            cx: box.cx(),
+            cy: box.cy()
+        }).hide()
 
         //text
         var label = group.text(text).fill(config.secondary);
         // text position
-        console.log(circle.cx())
-        label.x(circle.cx() * 4.5);
-        // label.x(shape.dx() + 10);
-        label.y(circle.cy() - label.y());
 
-        // Hover State
-        circle.mouseover(function(){
-            circle.fill({ color: config.secondary })
-            this.fill({ color: config.active  })
+        label.x(box.width() * 1.5).y(box.cy() - label.y());
 
-        })
-        circle.mouseout(function(){
-            circle.fill({ color: config.primary })
-            this.fill({ color: config.inactive  })
-        })
+        // Begin states
+        // Unchecked: Initial state
+        var checked = false
 
-        // Down State
-        circle.mousedown(function(){
-            circle.fill({ color: config.tertiary})
-            this.fill({ color: config.primary  })
+        var clickEvent = (function(e){
+            console.log(e);
+            // State: checked
+            if(checked){
+                checked = false
+                console.log('un-checked');
+                checkMark.hide()
 
-        })
-        // group.mouseup(function(){
-        //     shape.fill({ color: config.primary})
-        //     this.fill({ color: config.inactive  })
-        // })
-        // // on mouseup while Down && Hover
-        circle.click(function(event){
+            }
+            // State: unchecked
+            else{
+                checked = true
+                console.log('checked');
+                checkMark.show()
+            }
+        });
+
+
+        //
+        group.click(function(event){
             if(clickEvent != null)
                 clickEvent(event)
 
@@ -151,10 +146,6 @@ var LLama = (function() {
             move: function(x, y) {
                 group.move(x, y)
             },
-            onclick: function(eventHandler){
-                clickEvent = eventHandler
-
-            },
             label: function(string, size = 10, family = 'Helvetica'){
                 label.text(string)
                 label.font({size: size, family: family});
@@ -163,7 +154,80 @@ var LLama = (function() {
         }
 
     }
-    var RadioButton = function() {
+    var RadioButton = function(text = 'checkbox', qty= 1) {
+
+        /* create the group
+        * - sets the overflow attribute to visible to
+        *  prevent element cutoff
+        */
+        // create nested group to contain the shape and text
+        var group = draw.nested().attr({'overflow': 'visible'});
+        /* create group elements
+        * box
+        * checkMark
+        * label
+        * */
+        var box = group.circle({
+            r: 10,
+            fill: config.primary,
+            radius: 5,
+        }).stroke({ color: config.secondary, opacity: 0.6, width: 5 })
+
+
+        var checkMark = group.circle({
+            r: (box.width()/4),
+            fill: config.secondary,
+            cx: box.cx(),
+            cy: box.cy()
+        }).hide()
+
+        //text
+        var label = group.text(text).fill(config.secondary);
+        // text position
+
+        label.x(box.width() * 1.5).y(box.cy() - label.y());
+
+        // Begin states
+        // Unchecked: Initial state
+        var checked = false
+        var clickEvent = (function(e){
+            console.log(e);
+            // State: checked
+            if(checked){
+                // checked = false
+                // console.log('un-checked');
+                // checkMark.hide()
+
+            }
+            // State: unchecked
+            else{
+                checked = true
+                console.log('checked');
+                checkMark.show()
+            }
+        });
+
+
+        //
+        group.click(function(event){
+            if(clickEvent != null)
+                clickEvent(event)
+
+        })
+
+
+        // end States
+        // begin defining public functions
+        return {
+            move: function(x, y) {
+                group.move(x, y)
+            },
+            label: function(string, size = 10, family = 'Helvetica'){
+                label.text(string)
+                label.font({size: size, family: family});
+            }
+            // end public functions
+        }
 
 
     }

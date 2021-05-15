@@ -13,13 +13,15 @@ import { LLama } from './llamaworks.js';
 
 
     var checkbox = new LLama.CheckBox;
-    // checkbox.move(80, 20);
+    checkbox.move(80, 20);
     checkbox.label('toast', 12, 'cooper');
 
+    checkbox.onclick(function(e){
+        console.log(e);
+        console.log('button clicked');
+    });
+
+    // var radio = new LLama.RadioButton();
+    // radio.move(80, 20);
+    // radio.label('toast', 12, 'cooper');
     //
-    // checkbox.onclick(function(e){
-    //     console.log(e);
-    //     console.log('button clicked');
-    // });
-
-

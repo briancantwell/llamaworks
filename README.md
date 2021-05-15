@@ -34,9 +34,21 @@ https://stackoverflow.com/questions/19821450/how-to-center-text-in-the-rectangle
 * label(string, size, family)
     * defaults: string = 'button', size = 10, family = 'Helvetica'
 
-## CheckBox()
+## CheckBox(text, qty)
+* passing in an optional arguments(string, qty) sets the label for the check box with just default parameters
+  * defaults string = 'checkbox', size = 10, family = 'Helvetica', qty = 1
+* move(x,y)
+  * set the x and y values to position the button
+* label(string, size, family)
+  * defaults: string = 'button', size = 10, family = 'Helvetica'
 
-
+## RadioButton(text, qty)
+* passing in an optional arguments(string, qty) sets the label for the check box with just default parameters
+  * defaults string = 'radio', size = 10, family = 'Helvetica', qty = 1
+* move(x,y)
+  * set the x and y values to position the button
+* label(string, size, family)
+  * defaults: string = 'button', size = 10, family = 'Helvetica'
 
 
 # Button
