@@ -7,7 +7,7 @@ import {SVG} from './svg.min.js';
  * @type {{Button: (function(*=): {move: function(*=, *=): void, onclick: function(*): void, label: function(*=, *=, *=): void}), CheckBox: (function(*=, *=): {move: function(*=, *=): void, label: function(*=, *=, *=): void}), RadioButton: (function(*=, *=): {move: function(*=, *=): void, label: function(*=, *=, *=): void}), TextBox: TextBox, ProgressBar: (function(*=, *=, *=): {move: function(*=, *=): void, setProgress: function(*): void, getIncrement: function(): number, getProgress: function(): number}), ScrollBar: (function(*=, *=): {move: function(*=, *=): void, position: function(): *})}}
  */
 var LLama = (function() {
-    var draw = SVG().addTo('body').size('500', '500');
+    var draw = SVG().addTo('body').size('750', '750');
 
     var config = {
         // default color scheme
@@ -189,33 +189,35 @@ var LLama = (function() {
         * - sets the overflow attribute to visible to
         *  prevent element cutoff
         */
-        // create nested group to contain the shape and text
-        var group = draw.nested().attr({'overflow': 'visible'});
-        /* create group elements
-        * box
-        * checkMark
-        * label
-        * */
-        var box = group.circle({
-            r: 10,
-            fill: config.primary,
-            radius: 5,
-        }).stroke({ color: config.secondary, opacity: 0.6, width: 5 })
 
+        // populate buttons
+        for(var i = 0; i < qty; i++){
 
-        var checkMark = group.circle({
-            r: (box.width()/4),
-            fill: config.secondary,
-            cx: box.cx(),
-            cy: box.cy()
-        }).hide()
+            // create nested group to contain the shape and text
+            var group = draw.nested().attr({'overflow': 'visible'});
+            var box = group.circle({
+                r: 10,
+                fill: config.primary,
+                radius: 5,
+            }).stroke({ color: config.secondary, opacity: 0.6, width: 5 })
+            var checkMark = group.circle({
+                r: (box.width()/4),
+                fill: config.secondary,
+                cx: box.cx(),
+                cy: box.cy()
+            }).hide()
 
-        //text
-        var label = group.text(text).fill(config.secondary);
-        // text position
+            //text
+            var label = group.text(text).fill(config.secondary);
+            // text position
 
-        label.x(box.width() * 1.5).y(box.cy() - label.y());
+            label.x(box.width() * 1.5).y(box.cy() - label.y());
 
+            var yOffset = box.r * i;
+
+            group.move(20, yOffset);
+
+        }
         // Begin states
         // Unchecked: Initial state
         var checked = false
@@ -265,39 +267,53 @@ var LLama = (function() {
      *
      * @param width
      * @param height
+     * @returns {{move: move, text: ShareData.text}}
      * @constructor
      */
-    var TextBox = function(width = 100, height = 150) {
-        /*TODO: CURRENTLY NOT FUNCTIONAL*/
-        // var group = draw.nested();
+    var TextBox = function(width = 100, height = 25) {
 
-        // var backgroundBar = group.rect(width,height).fill(config.primary).radius(5);
-        // var text = group.text("I NEED TACOS!").fill(config.primary)
-        // var caret = text.line(10)
+        var group = draw.nested();
+        var textBox = group.rect(width, height).fill(config.primary)//foreignObject(width, height)
+        var focus = false;
+        var paper = group.text('')
+        var caretXOffset = 5;
+        var caret = group.line(0, 0, 0,20).move(caretXOffset,5).stroke({color: config.secondary, width:3})
 
+        // animate the caret for blinking
+        caret.animate({
+            times: Infinity,
+            duration: 600,
+        }).attr({opacity: 0})
 
-        var textBox = draw.rect(width, height)//foreignObject(width, height)
-        // group.add(foreignObject)
-        var text = draw.text('input').build(true)
+        caret.hide()
+        SVG.on(group, 'click', (e)=> {
+            focus = true;
+        })
+        SVG.on(window, 'click', (e)=>{
+            focus = false
+            caret.hide()
 
+        })
+        SVG.on(window, 'keydown', (e) => {
 
+                caret.show()
+                if (caret.x() < width - caretXOffset) {
+                    var newText = paper.text() + e.key
+                    paper.text(newText)
+                    var lead = 3;
+                    caret.x(paper.length() + lead)
+                }
 
-        // group.click(function(){
-        //    textBox.focus()
-        // });
+        })
+        return {
+            move: function (x, y) {
+                group.move(x, y)
+            },
+            text: function(newText){
+                paper.text(newText)
+            }
 
-        // return {
-        //     move: function (x, y) {
-        //         foreignObject.move(x, y)
-        //     },
-        //     onclick: function (eventHandler) {
-        //         clickEvent = eventHandler
-        //     },
-        //     text: function(){
-        //
-        //     }
-        //
-        // }
+        }
     }
 
     /**
@@ -379,10 +395,9 @@ var LLama = (function() {
         var backgroundBar = group.rect(width,height).fill(config.secondary);
         var progressBar = group.rect(currentProgress, height).fill(config.primary);
 
-
         return {
             move: function (x, y) {
-                foreignObject.move(x, y)
+                group.move(x, y)
             },
             getIncrement: function(){
               return increment;
